@@ -1,0 +1,20 @@
+Организация каталогов
+
+protected
+    config
+        config.production.php
+        config.stable.php
+        config.php
+    engine
+        libs
+        classes
+    modules
+    views
+    language
+        ru
+        en
+
+static
+    images
+    css
+    js
