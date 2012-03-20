@@ -26,7 +26,7 @@ class Router {
 
         // Обрабатывает запрос стартовой страницы
         if (count($path_components) == 0) {
-            Router::perform_controller_action("home",$action,array(),array());
+            return Router::perform_controller_action("home",$action,array(),array());
         }
 
 
@@ -82,11 +82,9 @@ class Router {
 
             //This route is a match for our request, let's get the controller working on it
             if ($goodRoute && ($i >= count($path_components) || $path_components[$i] == "")) {
-
-                Router::perform_controller_action($controller,$action,$objects,$parameters);
+                return Router::perform_controller_action($controller,$action,$objects,$parameters);
             }
         }
-
 
         error_404();
     }
@@ -112,7 +110,8 @@ class Router {
 
             if (!method_exists($controller_class,$action)) {
                 if (Router::render_view($class_path,$action)) {
-                    exit;
+                    //exit;
+                    return false;
                 } else {
                     fatal_error("$controller_class does not respond to $action");
                 }
@@ -122,11 +121,13 @@ class Router {
             $controller->parameters = $parameters;
             call_user_func_array(array($controller,$action),$objects);
             //exit;
+            return true;
         }
 
         //If no controller was found, we'll look for a view
         if (Router::render_view($class_path,$action)) {
             //exit;
+            return true;
         }
     }
 

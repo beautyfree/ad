@@ -1,4 +1,5 @@
 <?php
+
 $start_time = microtime(true);
 
 require_once '../engine/bootstrap.php';
