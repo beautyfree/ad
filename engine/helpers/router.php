@@ -1,14 +1,12 @@
 <?php
 
-/*
-Ben's Magic PHP routing class
-The static (class) methods in this class are used to find an appropriate controller/action to handle our request
-*/
-
 class Router {
 
     static function route() {
 
+        /**
+         *
+         */
         $sReq=preg_replace("/\/+/",'/',$_SERVER['REQUEST_URI']);
         $sReq=preg_replace("/^\/(.*)\/?$/U",'\\1',$sReq);
         $sReq=preg_replace("/^(.*)\?.*$/U",'\\1',$sReq);
@@ -48,29 +46,26 @@ class Router {
                 $action = $controller_action_array[1];
             }
 
-            //Loop through each component of this route until we find a part that doesn't match, or we run out of url
+            // Пробегаем по каждому компонету текущего роута пока не найдем часть которая не подходить или пробежимся по всем компанентам url
             foreach ($route_components as $route_component) {
-                //This part of the route is a named parameter
+                // Параметр
                 if (substr($route_component,0,1) == ":") {
                     $parameters[substr($route_component,1)] = $path_components[$i];
 
 
-                //This part of the route is an action for a controller
+                // Экшен для котроллера
                 } elseif ($route_component == "[action]") {
                     if ($path_components[$i] != "") {
                         $action = str_replace("-","_",$path_components[$i]);
                     }
 
-                //This part of the route will require that we create an object
+                // Эта часть маршрута потребует, чтобы мы создали объект
                 } elseif (substr($route_component,0,1) == "(" && substr($route_component,-1,1) == ")") {
                     $reflection_obj = new ReflectionClass(substr($route_component,1,strlen($route_component)-2));
                     $object = $reflection_obj->newInstanceArgs(array($path_components[$i]));
-
-
                     $objects[] = $object;
 
-
-                //Part of the url that isn't an action or an object didn't match, this definitely isn't the right route
+                // Если не к чему из этого не подошло то это неправильный роут
                 } elseif ($route_component != $path_components[$i] && str_replace("-","_",$route_component) != $path_components[$i]) {
                     //echo "Bad match: ".str_replace("-","_",$route_component)." != ".$path_components[$i]."<br />";
                     $goodRoute = false;
@@ -79,7 +74,7 @@ class Router {
                 $i++;
             }
 
-            //This route is a match for our request, let's get the controller working on it
+            //Этот роут удовлетворяет нашему запросу, получим котроллер работающего над ним
             if ($goodRoute && ($i >= count($path_components) || $path_components[$i] == "")) {
                 return Router::perform_controller_action($controller,$action,$objects,$parameters);
             }
@@ -133,7 +128,7 @@ class Router {
     static function render_view($class_path,$action) {
         $view_path = "/var/www/ad/app/views/$class_path/".$action.".php";
         if (file_exists($view_path)) {
-            $controller = new controller();
+            $controller = new Controller();
             require_once($view_path);
             return true;
         }

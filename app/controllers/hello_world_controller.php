@@ -4,7 +4,7 @@
 An example of a very simple controller that doesn't use views
 */
 
-class HelloWorldController extends controller {
+class HelloWorldController extends Controller {
 
     // GET /hello-world
     function index() {

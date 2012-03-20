@@ -7,7 +7,7 @@ function error_404() {
 }
 
 function fatal_error($error) {
-    die("Something went wrong: $error");
+    //die("Something went wrong: $error");
 }
 
 

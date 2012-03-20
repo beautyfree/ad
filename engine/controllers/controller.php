@@ -1,11 +1,11 @@
 <?php
 
-class controller {
+class Сontroller {
 
-	public $parameters = array();
+    public $parameters = array();
 
-	function __construct() {
-		//Why not add authorisation checks in here, then all controllers can inherit
-	}
+    function __construct() {
+        //Why not add authorisation checks in here, then all controllers can inherit
+    }
 
 }

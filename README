@@ -1,3 +1,11 @@
+Используются приемы следующих проектов:
+https://github.com/diaspora/diaspora
+https://github.com/arbales/php-mvc-router
+https://github.com/alloyphp/alloy-example-blog
+https://github.com/EllisLab/CodeIgniter
+https://github.com/yupe/yupe
+https://github.com/yiisoft/yii
+
 Организация каталогов
 
 engine
