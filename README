@@ -1,20 +1,14 @@
 Организация каталогов
 
-protected
-    config
-        config.production.php
-        config.stable.php
-        config.php
-    engine
-        libs
-        classes
-    modules
+engine
+app
+    controllers
+    helpers
+    models
     views
-    language
-        ru
-        en
-
-static
+htdocs
     images
-    css
-    js
+    javascripts
+    stylesheets
+    htaccess.default
+    index.php
