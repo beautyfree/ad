@@ -14,10 +14,10 @@ unset($paths);
 
 chdir (dirname(__FILE__));
 
-require_once('helpers/utility.php');
-require_once('helpers/router.php');
+require_once('utility.php');
+require_once('router.php');
 //require_once('../app/config/config.php');
-require_once('controllers/controller.php');
+require_once('action_controller.php');
 require_once('../app/config/routes.php');
 
 

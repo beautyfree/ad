@@ -8,10 +8,10 @@
 Способ с nginx
 
 location /ad {
-        root /var/www/ad/htdocs;
+        root /var/www/ad/public;
 
         if (!-e $request_filename ) {
-            rewrite ^ /ad/htdocs/index.php last;
+            rewrite ^ /ad/public/index.php last;
             break;
         }
 }

@@ -4,12 +4,7 @@
 An example of a controller method that uses the $parameters property of the controller class to create a friend object
 */
 
-class FriendsController extends Сontroller {
-
-
-    function __construct() {
-        Сontroller::__construct();
-    }
+class FriendsController extends ActionСontroller {
 
     // GET /friends/bobjones/johnsmith
     function view_friend() {
