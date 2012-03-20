@@ -1,4 +1,5 @@
 <?php
+
 $GLOBALS['routes'] = array(
 
     //Requests to /hello-world will go to the hello_world controller's 'index' action

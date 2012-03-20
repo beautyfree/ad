@@ -29,7 +29,6 @@ class Router {
             return Router::perform_controller_action("home",$action,array(),array());
         }
 
-
         // Пробегаем по роутам которые мы описали в route.php и пытаемся найти единственный, который удовлятворяет запросу
         foreach ($GLOBALS['routes'] as $route => $controller) {
             $route_components = explode("/",$route);
