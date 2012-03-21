@@ -3,14 +3,9 @@
 $start_time = microtime(true);
 
 
-
-
 require_once '../engine/bootstrap.php';
-
 $oDispatcher = new Dispatcher();
 $oDispatcher->dispatch();
-
-
 
 
 $exec_time = microtime(true) - $start_time;

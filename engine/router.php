@@ -154,8 +154,8 @@ class Router {
     protected function render_view($sClassPath,$sAction) {
         $sViewPath = "/var/www/ad/app/views/$sClassPath/$sAction.php";
         if (file_exists($sViewPath)) {
-            $oController = new ActionController();
-            require_once($sViewPath);
+            $this->oController = new ActionController($sClassPath,$sAction);
+            //require_once($sViewPath);
             return true;
         }
         return false;
@@ -164,12 +164,13 @@ class Router {
     protected function Shutdown() {
 
         // Путь к шаблону
-        $sTemplatePath = $this->oController->GetTemplate();
+        $this->oController->Render();
+        //$sTemplatePath = $this->oController->GetTemplate();
 
         /**
          * Подрубаем шаблон. Тут этого быть не должно
          */
-        require_once($sTemplatePath);
+        //require_once($sTemplatePath);
     }
 }
 

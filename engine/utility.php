@@ -1,5 +1,17 @@
 <?php
 
+function render($sTemplatePath) {
+    $aPath = explode('/',$sTemplatePath);
+
+    if(count($aPath)==1) {
+        $sTemplatePath = ActionController::GetControllerPath().'/'.$sTemplatePath;
+    }
+    ActionController::SetTemplateAction($sTemplatePath);
+
+    /*$sTemplatePath = ActionController::GetTemplate();
+    require_once($sTemplatePath);*/
+}
+
 function error_404() {
     header("HTTP/1.0 404 Not Found");
     include_once("../app/views/404.php");
@@ -7,7 +19,7 @@ function error_404() {
 }
 
 function fatal_error($error) {
-    //die("Something went wrong: $error");
+    die("Something went wrong: $error");
 }
 
 

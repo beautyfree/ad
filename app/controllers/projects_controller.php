@@ -13,7 +13,8 @@ class ProjectsController extends ApplicationController {
 
     // GET /projects/1234
     function view($project) {
-        require_once("views/projects/project.php");
+        $this->project = $project;
+        render('project');
     }
 
     // GET /projects/1234/delete

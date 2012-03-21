@@ -11,8 +11,7 @@ $paths = array(
 );
 set_include_path(implode(PATH_SEPARATOR, $paths));
 unset($paths);
-
-chdir (dirname(__FILE__));
+chdir(dirname(__FILE__));
 
 require_once('action_controller.php');
 require_once('../app/controllers/application_controller.php');
