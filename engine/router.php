@@ -86,9 +86,8 @@ class Router {
 
                 // Эта часть маршрута потребует, чтобы мы создали объект
                 } elseif (substr($sRouteComponent,0,1) == "(" && substr($sRouteComponent,-1,1) == ")") {
-                    $reflection_obj = new ReflectionClass(substr($sRouteComponent,1,strlen($sRouteComponent)-2));
-                    $object = $reflection_obj->newInstanceArgs(array($aPathComponents[$i]));
-                    $aObjects[] = $object;
+                    $oReflection = new ReflectionClass(substr($sRouteComponent,1,strlen($sRouteComponent)-2));
+                    $aObjects[] = $oReflection->newInstanceArgs(array($aPathComponents[$i]));
 
                 // Если не к чему из этого не подошло то это неправильный роут
                 } elseif ($sRouteComponent != $aPathComponents[$i] && str_replace("-","_",$sRouteComponent) != $aPathComponents[$i]) {
@@ -101,15 +100,6 @@ class Router {
 
             //Этот роут удовлетворяет нашему запросу, получим котроллер работающего над ним
             if ($bGoodRoute && ($i >= count($aPathComponents) || $aPathComponents[$i] == "")) {
-                echo $sController.'<br>';
-                echo $sAction.'<br>';
-                echo '<pre>';
-                echo print_r($aObjects);
-                echo '</pre>';
-                echo '<pre>';
-                echo print_r($aParameters);
-                echo '</pre>';
-
                 return Router::perform_controller_action($sController,$sAction,$aObjects,$aParameters);
             }
         }

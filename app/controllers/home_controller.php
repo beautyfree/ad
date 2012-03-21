@@ -1,6 +1,6 @@
 <?php
 
 
-class HomeController extends ActionController {
+class HomeController extends ApplicationController {
 
 }
