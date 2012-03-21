@@ -4,7 +4,7 @@
 An example of a simple controller using views
 */
 
-class ProjectsController extends ActionСontroller {
+class ProjectsController extends ActionController {
 
     // GET /projects
     function index() {

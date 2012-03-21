@@ -7,7 +7,7 @@ class Dispatcher {
         // Фильтр
         // Сессия
         $oRouter = new Router();
-        $oRouter->processRoute();
+        $oRouter->Exec();
 
     }
 

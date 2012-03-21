@@ -1,6 +1,6 @@
 <?php
 
-class ActionСontroller {
+class ActionController {
 
     public $parameters = array();
 

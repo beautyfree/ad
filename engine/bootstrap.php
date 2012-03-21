@@ -14,8 +14,9 @@ unset($paths);
 
 chdir (dirname(__FILE__));
 
-require_once('dispatcher.php');
 require_once('action_controller.php');
+require_once('dispatcher.php');
+
 require_once('utility.php');
 require_once('router.php');
 

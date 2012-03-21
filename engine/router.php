@@ -11,87 +11,106 @@ class Router {
         $this->LoadRouter();
     }
 
-
-
+    /**
+     * Загружаем маршруты из конфигурационного файла
+     */
     protected function LoadRouter() {
         $this->aRoutes = include('../app/config/routes.php');
     }
 
-    public function processRoute() {
+    public function Exec() {
+        $this->ParseUrl();
+    }
 
-        /**
-         *
-         */
+    protected function ParseUrl() {
+        $sReq = $this->GetRequestUri();
+        $aRequestUrl = $this->GetRequestArray($sReq);
+    }
+
+    protected function GetRequestUri() {
         $sReq=preg_replace("/\/+/",'/',$_SERVER['REQUEST_URI']);
         $sReq=preg_replace("/^\/(.*)\/?$/U",'\\1',$sReq);
         $sReq=preg_replace("/^(.*)\?.*$/U",'\\1',$sReq);
         $sReq=mb_strtolower($sReq);
 
-        $path_components = explode('/', $sReq);
+        return $sReq;
+    }
+
+    protected function GetRequestArray($sReq) {
+        $aPathComponents = explode('/', $sReq);
 
         $iOffsetUrl = 1;
         for($i=0;$i<$iOffsetUrl;$i++) {
-            array_shift($path_components);
+            array_shift($aPathComponents);
         }
 
         //default actions are called 'index'
         $action = "index";
 
         // Обрабатывает запрос стартовой страницы
-        if (count($path_components) == 0) {
+        if (count($aPathComponents) == 0) {
             return Router::perform_controller_action("home",$action,array(),array());
         }
 
         // Пробегаем по роутам которые мы описали в route.php и пытаемся найти единственный, который удовлятворяет запросу
-        foreach ($this->aRoutes as $route => $controller) {
-            $route_components = explode("/",$route);
-            array_shift($route_components);
+        foreach ($this->aRoutes as $sRoute => $sController) {
+            $aRouteComponents = explode("/",$sRoute);
+            array_shift($aRouteComponents);
 
-            $action = "index";
+            $sAction = "index";
             $i=0;
-            $objects = array();
-            $goodRoute = true;
-            $path_components = array_pad($path_components, count($route_components), '');
-            $parameters = array();
+            $aObjects = array();
+            $bGoodRoute = true;
+            $aPathComponents = array_pad($aPathComponents, count($aRouteComponents), '');
+            $aParameters = array();
 
             // Обрабатываем роуты которые вызывают специфичные экшены
-            $controller_action_array = explode(":",$controller);
-            $controller = $controller_action_array[0];
-            if (count($controller_action_array) == 2) {
-                $action = $controller_action_array[1];
+            $aControllerAction = explode(":",$sController);
+            $sController = $aControllerAction[0];
+            if (count($aControllerAction) == 2) {
+                $sAction = $aControllerAction[1];
             }
 
             // Пробегаем по каждому компонету текущего роута пока не найдем часть которая не подходить или пробежимся по всем компанентам url
-            foreach ($route_components as $route_component) {
+            foreach ($aRouteComponents as $sRouteComponent) {
                 // Параметр
-                if (substr($route_component,0,1) == ":") {
-                    $parameters[substr($route_component,1)] = $path_components[$i];
+                if (substr($sRouteComponent,0,1) == ":") {
+                    $aParameters[substr($sRouteComponent,1)] = $aPathComponents[$i];
 
 
                 // Экшен для котроллера
-                } elseif ($route_component == "[action]") {
-                    if ($path_components[$i] != "") {
-                        $action = str_replace("-","_",$path_components[$i]);
+                } elseif ($sRouteComponent == "[action]") {
+                    if ($aPathComponents[$i] != "") {
+                        $sAction = str_replace("-","_",$aPathComponents[$i]);
                     }
 
                 // Эта часть маршрута потребует, чтобы мы создали объект
-                } elseif (substr($route_component,0,1) == "(" && substr($route_component,-1,1) == ")") {
-                    $reflection_obj = new ReflectionClass(substr($route_component,1,strlen($route_component)-2));
-                    $object = $reflection_obj->newInstanceArgs(array($path_components[$i]));
-                    $objects[] = $object;
+                } elseif (substr($sRouteComponent,0,1) == "(" && substr($sRouteComponent,-1,1) == ")") {
+                    $reflection_obj = new ReflectionClass(substr($sRouteComponent,1,strlen($sRouteComponent)-2));
+                    $object = $reflection_obj->newInstanceArgs(array($aPathComponents[$i]));
+                    $aObjects[] = $object;
 
                 // Если не к чему из этого не подошло то это неправильный роут
-                } elseif ($route_component != $path_components[$i] && str_replace("-","_",$route_component) != $path_components[$i]) {
-                    //echo "Bad match: ".str_replace("-","_",$route_component)." != ".$path_components[$i]."<br />";
-                    $goodRoute = false;
+                } elseif ($sRouteComponent != $aPathComponents[$i] && str_replace("-","_",$sRouteComponent) != $aPathComponents[$i]) {
+                    //echo "Bad match: ".str_replace("-","_",$sRouteComponent)." != ".$aPathComponents[$i]."<br />";
+                    $bGoodRoute = false;
                     break;
                 }
                 $i++;
             }
 
             //Этот роут удовлетворяет нашему запросу, получим котроллер работающего над ним
-            if ($goodRoute && ($i >= count($path_components) || $path_components[$i] == "")) {
-                return Router::perform_controller_action($controller,$action,$objects,$parameters);
+            if ($bGoodRoute && ($i >= count($aPathComponents) || $aPathComponents[$i] == "")) {
+                echo $sController.'<br>';
+                echo $sAction.'<br>';
+                echo '<pre>';
+                echo print_r($aObjects);
+                echo '</pre>';
+                echo '<pre>';
+                echo print_r($aParameters);
+                echo '</pre>';
+
+                return Router::perform_controller_action($sController,$sAction,$aObjects,$aParameters);
             }
         }
 
@@ -99,52 +118,50 @@ class Router {
     }
 
     //Look for a controller file matching the request, and failing that, a view
-    static function perform_controller_action($class_path,$action,$objects,$parameters) {
+    static function perform_controller_action($sClassPath,$sAction,$aObjects,$aParameters) {
 
         //We treat 'new' the same as 'edit', since they generally contain a lot of the same code
-        if ($action == "new") {
-            $action = "edit";
+        if ($sAction == "new") {
+            $sAction = "edit";
         }
 
         // Ищем контроллер
-        $sControllerPath = "/var/www/ad/app/controllers/".$class_path."_controller.php";
+        $sControllerPath = "/var/www/ad/app/controllers/".$sClassPath."_controller.php";
         if (file_exists($sControllerPath)) {
             require_once($sControllerPath);
 
-            $class_path_components = explode("/",$class_path);
-            $class = $class_path_components[count($class_path_components)-1];
-            $class[0] = strtoupper($class[0]);
-            $class= preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $class);
-            $controller_class = $class."Controller";
+            $aClassPathComponents = explode("/",$sClassPath);
+            $sClass = $aClassPathComponents[count($aClassPathComponents)-1];
+            $sClass[0] = strtoupper($sClass[0]);
+            $sClass= preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $sClass);
+            $sControllerClass = $sClass."Controller";
 
-            if (!method_exists($controller_class,$action)) {
-                if (Router::render_view($class_path,$action)) {
+            if (!method_exists($sControllerClass,$sAction)) {
+                if (Router::render_view($sClassPath,$sAction)) {
                     //exit;
                     return false;
                 } else {
-                    fatal_error("$controller_class does not respond to $action");
+                    fatal_error("$sControllerClass does not respond to $sAction");
                 }
             }
 
-            $controller = new $controller_class();
-            $controller->parameters = $parameters;
-            call_user_func_array(array($controller,$action),$objects);
-            //exit;
+            $oController = new $sControllerClass();
+            $oController->parameters = $aParameters;
+            call_user_func_array(array($oController,$sAction),$aObjects);
             return true;
         }
 
         //If no controller was found, we'll look for a view
-        if (Router::render_view($class_path,$action)) {
-            //exit;
+        if (Router::render_view($sClassPath,$sAction)) {
             return true;
         }
     }
 
-    static function render_view($class_path,$action) {
-        $view_path = "/var/www/ad/app/views/$class_path/".$action.".php";
-        if (file_exists($view_path)) {
-            $controller = new ActionController();
-            require_once($view_path);
+    static function render_view($sClassPath,$sAction) {
+        $sViewPath = "/var/www/ad/app/views/$sClassPath/$sAction.php";
+        if (file_exists($sViewPath)) {
+            $oController = new ActionController();
+            require_once($sViewPath);
             return true;
         }
         return false;
