@@ -14,13 +14,10 @@ unset($paths);
 
 chdir (dirname(__FILE__));
 
+require_once('dispatcher.php');
+require_once('action_controller.php');
 require_once('utility.php');
 require_once('router.php');
-//require_once('../app/config/config.php');
-require_once('action_controller.php');
-require_once('../app/config/routes.php');
-
-
 
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');

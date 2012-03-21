@@ -2,7 +2,22 @@
 
 class Router {
 
-    static function route() {
+    /**
+     * Маршруты
+     */
+    protected $aRoutes = array();
+
+    public function __construct() {
+        $this->LoadRouter();
+    }
+
+
+
+    protected function LoadRouter() {
+        $this->aRoutes = include('../app/config/routes.php');
+    }
+
+    public function processRoute() {
 
         /**
          *
@@ -28,7 +43,7 @@ class Router {
         }
 
         // Пробегаем по роутам которые мы описали в route.php и пытаемся найти единственный, который удовлятворяет запросу
-        foreach ($GLOBALS['routes'] as $route => $controller) {
+        foreach ($this->aRoutes as $route => $controller) {
             $route_components = explode("/",$route);
             array_shift($route_components);
 
@@ -128,7 +143,7 @@ class Router {
     static function render_view($class_path,$action) {
         $view_path = "/var/www/ad/app/views/$class_path/".$action.".php";
         if (file_exists($view_path)) {
-            $controller = new ActionСontroller();
+            $controller = new ActionController();
             require_once($view_path);
             return true;
         }
