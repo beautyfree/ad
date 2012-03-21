@@ -7,6 +7,8 @@ class Router {
      */
     protected $aRoutes = array();
 
+    protected $oController;
+
     public function __construct() {
         $this->LoadRouter();
     }
@@ -20,6 +22,7 @@ class Router {
 
     public function Exec() {
         $this->ParseUrl();
+        $this->Shutdown();
     }
 
     protected function ParseUrl() {
@@ -49,7 +52,7 @@ class Router {
 
         // Обрабатывает запрос стартовой страницы
         if (count($aPathComponents) == 0) {
-            return Router::perform_controller_action("home",$action,array(),array());
+            return $this->perform_controller_action("home",$action,array(),array());
         }
 
         // Пробегаем по роутам которые мы описали в route.php и пытаемся найти единственный, который удовлятворяет запросу
@@ -100,7 +103,7 @@ class Router {
 
             //Этот роут удовлетворяет нашему запросу, получим котроллер работающего над ним
             if ($bGoodRoute && ($i >= count($aPathComponents) || $aPathComponents[$i] == "")) {
-                return Router::perform_controller_action($sController,$sAction,$aObjects,$aParameters);
+                return $this->perform_controller_action($sController,$sAction,$aObjects,$aParameters);
             }
         }
 
@@ -108,7 +111,7 @@ class Router {
     }
 
     //Look for a controller file matching the request, and failing that, a view
-    static function perform_controller_action($sClassPath,$sAction,$aObjects,$aParameters) {
+    protected function perform_controller_action($sClassPath,$sAction,$aObjects,$aParameters) {
 
         //We treat 'new' the same as 'edit', since they generally contain a lot of the same code
         if ($sAction == "new") {
@@ -122,32 +125,33 @@ class Router {
 
             $aClassPathComponents = explode("/",$sClassPath);
             $sClass = $aClassPathComponents[count($aClassPathComponents)-1];
-            $sClass[0] = strtoupper($sClass[0]);
-            $sClass= preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $sClass);
+            $sClass = ucfirst($sClass);
+
+            $sClass = preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $sClass);
             $sControllerClass = $sClass."Controller";
 
             if (!method_exists($sControllerClass,$sAction)) {
-                if (Router::render_view($sClassPath,$sAction)) {
-                    //exit;
+                if ($this->render_view($sClassPath,$sAction)) {
                     return false;
                 } else {
                     fatal_error("$sControllerClass does not respond to $sAction");
                 }
             }
 
-            $oController = new $sControllerClass();
-            $oController->parameters = $aParameters;
-            call_user_func_array(array($oController,$sAction),$aObjects);
+            $this->oController = new $sControllerClass($sClassPath,$sAction);
+            $this->oController->parameters = $aParameters;
+            call_user_func_array(array($this->oController,$sAction),$aObjects);
+
             return true;
         }
 
         //If no controller was found, we'll look for a view
-        if (Router::render_view($sClassPath,$sAction)) {
+        if ($this->render_view($sClassPath,$sAction)) {
             return true;
         }
     }
 
-    static function render_view($sClassPath,$sAction) {
+    protected function render_view($sClassPath,$sAction) {
         $sViewPath = "/var/www/ad/app/views/$sClassPath/$sAction.php";
         if (file_exists($sViewPath)) {
             $oController = new ActionController();
@@ -155,6 +159,17 @@ class Router {
             return true;
         }
         return false;
+    }
+
+    protected function Shutdown() {
+
+        // Путь к шаблону
+        $sTemplatePath = $this->oController->GetTemplate();
+
+        /**
+         * Подрубаем шаблон. Тут этого быть не должно
+         */
+        require_once($sTemplatePath);
     }
 }
 
