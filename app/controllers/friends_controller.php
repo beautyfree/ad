@@ -11,8 +11,8 @@ class FriendsController extends ApplicationController {
 
         $user = new user($this->parameters['user']);
         $other_user = new user($this->parameters['friend']);
-        $friend = new friend($user->username,$other_user->username);
-        require_once("views/friends/friend.php");
+        $this->friend = new friend($user->username,$other_user->username);
+        render('friend');
     }
 
 }

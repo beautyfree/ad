@@ -8,7 +8,7 @@ class ProjectsController extends ApplicationController {
 
     // GET /projects
     function index() {
-        //require_once("views/projects/index.php");
+
     }
 
     // GET /projects/1234
@@ -21,12 +21,14 @@ class ProjectsController extends ApplicationController {
     function delete($project) {
         //This is just an example, so it doesn't actually delete anything
         $project->delete();
-        header("Location: /projects");
+        header('Location: /projects');
     }
 
     // GET //projects/1234/items/567
     function view_item($project,$item) {
-        require_once("views/projects/item.php");
+        $this->project = $project;
+        $this->item = $item;
+        render('item');
     }
 
 }

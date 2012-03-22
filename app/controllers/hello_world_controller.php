@@ -8,6 +8,7 @@ class HelloWorldController extends ApplicationController {
 
     // GET /hello-world
     function index() {
+
     }
 
     // GET /hello-world/say-hello
