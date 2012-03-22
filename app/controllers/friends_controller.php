@@ -9,9 +9,9 @@ class FriendsController extends ApplicationController {
     // GET /friends/bobjones/johnsmith
     function view_friend() {
 
-        $user = new user($this->parameters['user']);
-        $other_user = new user($this->parameters['friend']);
-        $this->friend = new friend($user->username,$other_user->username);
+        $user = new User($this->parameters['user']);
+        $other_user = new User($this->parameters['friend']);
+        $this->friend = new Friend($user->username,$other_user->username);
         render('friend');
     }
 

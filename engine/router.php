@@ -141,10 +141,9 @@ class Router {
             $this->oController->parameters = self::$aParameters;
 
             foreach(self::$aObjects as $oObject) {
-                $sName = get_class($oObject);
+                $sName = strtolower(get_class($oObject));
                 $this->oController->$sName = $oObject;
             }
-
             call_user_func_array(array($this->oController,self::$sAction),self::$aObjects);
 
             return true;

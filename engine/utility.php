@@ -22,12 +22,12 @@ function fatal_error($error) {
 
 //automatically load classes from the models folder
 //see -> http://us3.php.net/manual/en/language.oop5.autoload.php
-function __autoload($class) {
-
-    if (file_exists("/var/www/ad/app/models/$class.php")) {
-        require_once("/var/www/ad/app/models/$class.php");
+function __autoload($sClass) {
+    $sClass = strtolower($sClass);
+    if (file_exists("/var/www/ad/app/models/$sClass.php")) {
+        require_once("/var/www/ad/app/models/$sClass.php");
         return;
     }
 
-    fatal_error("Cannot find class '$class'");
+    fatal_error("Cannot find class '$sClass'");
 }
