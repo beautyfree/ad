@@ -4,11 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // set inc path
-$paths = array(
-    dirname(dirname(__FILE__)) . '/app',
-    get_include_path(),
-    dirname(__FILE__)
-);
+$paths = array(dirname(dirname(__FILE__)) . '/app', get_include_path(), dirname(__FILE__));
 set_include_path(implode(PATH_SEPARATOR, $paths));
 unset($paths);
 chdir(dirname(__FILE__));

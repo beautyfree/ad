@@ -13,7 +13,6 @@ class ProjectsController extends ApplicationController {
 
     // GET /projects/1234
     function view($project) {
-        $this->project = $project;
         render('project');
     }
 
@@ -26,8 +25,6 @@ class ProjectsController extends ApplicationController {
 
     // GET //projects/1234/items/567
     function view_item($project,$item) {
-        $this->project = $project;
-        $this->item = $item;
         render('item');
     }
 

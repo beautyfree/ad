@@ -7,9 +7,6 @@ function render($sTemplatePath) {
         $sTemplatePath = ActionController::GetControllerPath().'/'.$sTemplatePath;
     }
     ActionController::SetTemplateAction($sTemplatePath);
-
-    /*$sTemplatePath = ActionController::GetTemplate();
-    require_once($sTemplatePath);*/
 }
 
 function error_404() {
