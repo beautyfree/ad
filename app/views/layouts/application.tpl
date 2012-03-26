@@ -1,9 +1,9 @@
 <html>
     <head>
-        <title>Test</title>
+        <title>{{ title }}</title>
     </head>
 
     <body>
-        <?php echo $content ?>
+        {{ main_content }}
     </body>
 </html>

@@ -154,49 +154,8 @@ class Router {
         }
     }
 
-    protected function render_view() {
-        $sPath = $this->oController->GetTemplate();
-
-        if(file_exists('/var/www/ad/app/views/'.$sPath.'.tpl')) {
-            $oTemplate = $this->oView->GetTwig();
-
-            if(is_object($this)) {
-                $aControllerLocals = get_object_vars($this->oController);
-            }
-            $aLocals = array(); // Должны передаваться в рендер со стороны экшена
-            if(is_array($aControllerLocals)) {
-                $aLocals = array_merge($aControllerLocals, $aLocals);
-            }
-            $sContent = $oTemplate->render($sPath.'.tpl',$aLocals);
-
-            echo $sContent;
-
-            /*
-            # Pull all the class vars out and turn them from $this->var to $var
-            if(is_object($this)) {
-                $aControllerLocals = get_object_vars($this->oController);
-            }
-            $aLocals = array(); // Должны передаваться в рендер со стороны экшена
-            if(is_array($aControllerLocals)) {
-                $aLocals = array_merge($aControllerLocals, $aLocals);
-            }
-            if(count($aLocals)) {
-                foreach($aLocals as $sTmpKey => $sTmpValue) {
-                    ${$sTmpKey} = $sTmpValue;
-                }
-                unset($sTmpKey);
-                unset($sTmpValue);
-            }
-            include($sPath);
-            */
-
-            return true;
-        }
-        return false;
-    }
-
     protected function Shutdown() {
-        $this->render_view();
+        $this->oView->Display($this->oController);
     }
 }
 

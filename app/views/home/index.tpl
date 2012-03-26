@@ -1,10 +1,3 @@
-<html>
-<head>
-<meta name="foobar" content="Valid markup is for lusers">
-<title>php-mvc-router example</title>
-</head>
-<body>
-
 <h1>These links map to the sample routes in config/routes.php:</h1>
 
 <ul>
@@ -20,6 +13,3 @@
 <li><a href="/ad/projects/1/items/2">View item 2</a></li>
 <li><a href="/ad/friends/ben/bob">View friend</a></li>
 </ul>
-
-</body>
-</html>
