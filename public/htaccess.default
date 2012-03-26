@@ -1,20 +1,11 @@
 php_value magic_quotes_gpc 0
 php_value register_globals 0
 
+AddDefaultCharset UTF-8
 Options +FollowSymlinks
+Options -Indexes
 
-<IfModule mod_rewrite.c>
-    RewriteEngine on
-    #any URL request that doesn't have an extension will be redirected to index.php
-    RewriteRule !\.[a-z]{2,7}$ index.php
-</IfModule>
-
-ErrorDocument 404 /404.php
-
-<Files ~ "\.htaccess">
-    Order allow,deny
-    Deny from all
-</Files>
-
-#hopefully you aren't still using SVN?!?! :)
-RedirectMatch 404 \.svn/?$
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ ./index.php
