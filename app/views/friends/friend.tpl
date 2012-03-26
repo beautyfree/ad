@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>'<?= $friend->user; ?>' is friends with '<?= $friend->friend; ?>'!</h1>
+<h1>'{{ friend.user }}' is friends with '{{ friend.friend }}'!</h1>
 
 </body>
 </html>

@@ -11,7 +11,7 @@ function render($sTemplatePath) {
 
 function error_404() {
     header("HTTP/1.0 404 Not Found");
-    include_once("../app/views/404.php");
+    include_once("../app/views/404.tpl");
     exit;
 }
 
@@ -20,13 +20,21 @@ function fatal_error($error) {
 }
 
 
-//automatically load classes from the models folder
-//see -> http://us3.php.net/manual/en/language.oop5.autoload.php
 function __autoload($sClass) {
-    $sClass = strtolower($sClass);
-    if (file_exists("/var/www/ad/app/models/$sClass.php")) {
-        require_once("/var/www/ad/app/models/$sClass.php");
+    $sNameClass = strtolower($sClass);
+
+    if (file_exists("/var/www/ad/app/models/$sNameClass.php")) {
+        require_once "/var/www/ad/app/models/$sNameClass.php";
+
         return;
+    } else {
+        $aNameClass = explode("_", $sClass);
+        if (sizeof($aNameClass) > 1) {
+            $sNameClass = implode(DIRECTORY_SEPARATOR, $aNameClass) . '.php';
+            require_once $sNameClass;
+
+            return;
+        }
     }
 
     fatal_error("Cannot find class '$sClass'");

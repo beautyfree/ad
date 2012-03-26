@@ -8,6 +8,8 @@ class Router {
     protected $aRoutes = array();
     protected $oController;
 
+    protected $oView; // Вынести
+
     static protected $sController=null;
     static protected $sAction=null;
     static protected $aObjects=array();
@@ -15,13 +17,15 @@ class Router {
 
     public function __construct() {
         $this->LoadRouter();
+
+        $this->oView = new ActionView();
     }
 
     /**
      * Загружаем маршруты из конфигурационного файла
      */
     protected function LoadRouter() {
-        $this->aRoutes = include('../app/config/routes.php');
+        $this->aRoutes = include('../config/routes.php');
     }
 
     public function Exec() {
@@ -153,10 +157,21 @@ class Router {
     protected function render_view() {
         $sPath = $this->oController->GetTemplate();
 
-        # Renders a template relative to app/views
-        $sPath = "/var/www/ad/app/views/".$sPath.".php";
+        if(file_exists('/var/www/ad/app/views/'.$sPath.'.tpl')) {
+            $oTemplate = $this->oView->GetTwig();
 
-        if(file_exists($sPath)) {
+            if(is_object($this)) {
+                $aControllerLocals = get_object_vars($this->oController);
+            }
+            $aLocals = array(); // Должны передаваться в рендер со стороны экшена
+            if(is_array($aControllerLocals)) {
+                $aLocals = array_merge($aControllerLocals, $aLocals);
+            }
+            $sContent = $oTemplate->render($sPath.'.tpl',$aLocals);
+
+            echo $sContent;
+
+            /*
             # Pull all the class vars out and turn them from $this->var to $var
             if(is_object($this)) {
                 $aControllerLocals = get_object_vars($this->oController);
@@ -173,6 +188,8 @@ class Router {
                 unset($sTmpValue);
             }
             include($sPath);
+            */
+
             return true;
         }
         return false;
