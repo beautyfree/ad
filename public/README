@@ -1,12 +1,6 @@
 Для работы необходимо изменить некоторые настройки php
 
-Способ с .htaccess
-Переименовать htaccess.default в .htaccess
-
-
-
 Способ с nginx
-
 location /ad {
         root /var/www/ad/public;
 
