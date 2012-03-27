@@ -1,4 +1,14 @@
-<?php
+    <?php
+
+/**
+    GET     /photos             index   отображает список всех фото
+    GET     /photos/new         new     возвращает форму HTML для создания нового фото
+    POST    /photos             create  создает новое фото
+    GET     /photos/:id         show    отображает определенное фото
+    GET     /photos/:id/edit    edit    возвращает форму HTML для редактирования фото
+    PUT     /photos/:id         update  обновляет определенное фото
+    DELETE  /photos/:id         destroy удаляет определенное фото
+*/
 
 class Router {
 
@@ -128,7 +138,8 @@ class Router {
 
         //We treat 'new' the same as 'edit', since they generally contain a lot of the same code
         if (self::$sAction == "new")
-            self::$sAction = "edit";
+            //self::$sAction = "edit";
+            self::$sAction = "add";
 
         // Ищем контроллер
         $sControllerPath = "/var/www/ad/app/controllers/".self::$sController."_controller.php";

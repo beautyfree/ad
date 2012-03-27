@@ -2,6 +2,8 @@
 
 $routes = array(
 
+    '/weight/new' => 'weight:new',
+
     //Requests to /hello-world will go to the hello_world controller's 'index' action
     '/hello-world' => 'hello_world',
 

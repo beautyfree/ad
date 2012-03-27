@@ -1,0 +1,46 @@
+body {
+    background: #ededef url(/images/bg.gif);
+}
+
+#wrapper {
+
+}
+    #container-header {
+        position: relative;
+        z-index: 10;
+        height: 45px;
+        background: #852727 url(/images/header_bg.gif);
+        box-shadow: 0 3px 3px rgba(140,140,140,0.5);
+    }
+        #header {
+            position: relative;
+            width: 800px;
+            margin: 0 auto;
+        }
+            #header .login {
+                position: absolute;
+                right: 20px;
+            }
+    #content {
+        border: 1px solid #ddd;
+        border-top: none;
+        background: #fff;
+        width: 800px;
+        margin: 0 auto;
+    }
+        #content form {
+            margin-bottom: 0 !important;
+        }
+        #content form legend {
+            padding-left: 10px;
+        }
+        #content form .form-actions {
+            margin-bottom: 0 !important;
+        }
+    #footer {}
+
+div.button {
+
+}
+
+
